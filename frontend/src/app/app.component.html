@@ -1,0 +1,69 @@
+<main class="shell">
+  <section class="hero">
+    <nav>
+      <div class="brand"><span>🚌</span> SkoolBus Guardian</div>
+      <a href="#scenario">Parent scenario</a>
+      <a href="#ops">School ops</a>
+      <a href="#supabase">Supabase</a>
+    </nav>
+    <div class="hero-grid">
+      <div>
+        <p class="eyebrow">NFC + GPS + parent notifications</p>
+        <h1>Know exactly when every child boards, reaches school, and returns home.</h1>
+        <p class="hero-copy">A real-world school transportation suite for parents and schools with route ETAs, delay escalation, alternate bus handling, and smart-card attendance.</p>
+        <div class="cta-row"><button>Track my bus</button><button class="secondary">View school console</button></div>
+      </div>
+      <div class="phone-card" [class.loading]="loading">
+        <div class="phone-header">Live Route</div>
+        <div class="bus-code">{{ dashboard?.bus?.busCode || 'G071845' }}</div>
+        <div class="map-line"><span></span><span></span><span></span></div>
+        <p>{{ dashboard?.bus?.routeName || 'East City Route - Sector 14' }}</p>
+        <strong>{{ dashboard?.bus?.etaMinutes || 2 }} min to your stop</strong>
+        <small [class]="statusClass">{{ dashboard?.bus?.status || 'ON_ROUTE' }}</small>
+      </div>
+    </div>
+  </section>
+
+  <p class="api-warning" *ngIf="error">{{ error }}</p>
+
+  <section class="metrics" *ngIf="dashboard as data">
+    <article><strong>{{ data.bus.occupancy }}</strong><span>students onboard</span></article>
+    <article><strong>{{ data.bus.delayMinutes }}</strong><span>minutes delayed</span></article>
+    <article><strong>{{ data.notifications.length }}</strong><span>guardian alerts today</span></article>
+    <article><strong>{{ data.incidents.length }}</strong><span>open incidents</span></article>
+  </section>
+
+  <section id="scenario" class="timeline">
+    <div class="section-heading"><p>Real case scenario</p><h2>From school departure to safe handoff</h2></div>
+    <article *ngFor="let event of dashboard?.notifications">
+      <time>{{ event.occurredAt | date:'shortTime' }}</time>
+      <div><h3>{{ event.title }}</h3><p>{{ event.message }}</p><span>{{ event.channel }} · {{ event.eventType }}</span></div>
+    </article>
+  </section>
+
+  <section id="ops" class="split" *ngIf="dashboard as data">
+    <div>
+      <p class="eyebrow">Guardian roster</p>
+      <h2>NFC smart-card attendance</h2>
+      <div class="student" *ngFor="let student of data.students">
+        <div><strong>{{ student.studentName }}</strong><span>{{ student.grade }} · {{ student.pickupStop }}</span></div>
+        <mark>{{ student.morningStatus }}</mark>
+      </div>
+    </div>
+    <div class="incident-card">
+      <p class="eyebrow">Incident desk</p>
+      <h2>Breakdown and alternate bus workflow</h2>
+      <div *ngFor="let incident of data.incidents">
+        <strong>{{ incident.severity }} · {{ incident.status }}</strong>
+        <p>{{ incident.description }}</p>
+        <small>{{ incident.resolutionPlan }}</small>
+      </div>
+    </div>
+  </section>
+
+  <section id="supabase" class="supabase">
+    <p class="eyebrow">Database-ready</p>
+    <h2>Supabase Postgres stores buses, guardians, students, GPS pings, NFC scans, notifications, and incidents.</h2>
+    <p>Use the included SQL schema and Spring profile to connect the API to your Supabase project while Angular can optionally read realtime notification rows using the anon key.</p>
+  </section>
+</main>

@@ -1,0 +1,40 @@
+:host { display: block; color: #172033; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+.shell { background: #f6f8fb; min-height: 100vh; }
+.hero { background: radial-gradient(circle at top right, #ffe58a, transparent 34%), linear-gradient(135deg, #10223f, #1d4b73); color: white; padding: 28px clamp(20px, 5vw, 72px) 70px; }
+nav { align-items: center; display: flex; gap: 28px; margin-bottom: 72px; }
+nav a { color: #c9d8ec; text-decoration: none; }
+.brand { font-size: 1.25rem; font-weight: 800; margin-right: auto; }
+.hero-grid { align-items: center; display: grid; gap: 48px; grid-template-columns: minmax(0, 1.2fr) 380px; }
+.eyebrow { color: #ffca28; font-size: .78rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+h1 { font-size: clamp(2.4rem, 5vw, 5rem); line-height: .95; margin: 0; max-width: 850px; }
+h2 { font-size: clamp(1.7rem, 3vw, 2.7rem); line-height: 1.05; margin: 0 0 20px; }
+.hero-copy { color: #dce7f7; font-size: 1.2rem; max-width: 720px; }
+.cta-row { display: flex; gap: 16px; margin-top: 32px; }
+button { background: #ffca28; border: 0; border-radius: 999px; color: #15223a; cursor: pointer; font-weight: 800; padding: 14px 24px; }
+button.secondary { background: rgba(255,255,255,.14); color: white; outline: 1px solid rgba(255,255,255,.35); }
+.phone-card { background: #fff; border-radius: 34px; box-shadow: 0 24px 80px rgba(0,0,0,.3); color: #172033; padding: 30px; position: relative; }
+.phone-header { color: #6c7890; font-weight: 700; }
+.bus-code { font-size: 3rem; font-weight: 900; margin: 18px 0; }
+.map-line { background: #eef3f8; border-radius: 24px; display: flex; justify-content: space-between; margin: 28px 0; padding: 18px; }
+.map-line span { background: #22b573; border: 5px solid white; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,.12); height: 22px; width: 22px; }
+.phone-card strong { display: block; font-size: 1.8rem; }
+.phone-card small { border-radius: 999px; display: inline-block; font-weight: 900; margin-top: 16px; padding: 8px 12px; }
+.on-route { background: #e2fbef; color: #08713d; }
+.delayed { background: #fff3d1; color: #8a5c00; }
+.api-warning { background: #fff3cd; border-left: 5px solid #f0ad00; margin: 0; padding: 16px clamp(20px, 5vw, 72px); }
+.metrics { display: grid; gap: 18px; grid-template-columns: repeat(4, 1fr); margin: -36px clamp(20px, 5vw, 72px) 52px; position: relative; }
+.metrics article, .timeline article, .split > div, .supabase { background: white; border: 1px solid #e5ebf2; border-radius: 24px; box-shadow: 0 16px 40px rgba(25,38,64,.08); padding: 24px; }
+.metrics strong { display: block; font-size: 2.3rem; }
+.metrics span { color: #667085; }
+.timeline, .split, .supabase { margin: 52px clamp(20px, 5vw, 72px); }
+.section-heading { max-width: 720px; }
+.timeline article { align-items: flex-start; display: grid; gap: 24px; grid-template-columns: 110px 1fr; margin: 16px 0; }
+time { color: #f5a400; font-weight: 900; }
+.timeline h3 { margin: 0 0 8px; }
+.timeline span, .student span, .incident-card small { color: #697386; display: block; }
+.split { display: grid; gap: 24px; grid-template-columns: 1fr 1fr; }
+.student { align-items: center; border-top: 1px solid #e7edf5; display: flex; justify-content: space-between; padding: 18px 0; }
+mark { background: #e8f7ff; border-radius: 999px; color: #0969a2; font-weight: 800; padding: 8px 12px; }
+.incident-card { background: linear-gradient(160deg, #fff, #fff7e1) !important; }
+.supabase { margin-bottom: 0; }
+@media (max-width: 850px) { .hero-grid, .split, .metrics { grid-template-columns: 1fr; } nav { flex-wrap: wrap; } }
