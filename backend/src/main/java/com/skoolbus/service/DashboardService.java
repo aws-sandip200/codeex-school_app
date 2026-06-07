@@ -2,6 +2,7 @@ package com.skoolbus.service;
 
 import com.skoolbus.dto.DashboardResponse;
 import com.skoolbus.model.Bus;
+import com.skoolbus.model.UserMaster;
 import com.skoolbus.repository.BusRepository;
 import com.skoolbus.repository.IncidentRepository;
 import com.skoolbus.repository.NotificationEventRepository;
@@ -24,6 +25,17 @@ public class DashboardService {
 
     public DashboardResponse guardianDashboard(Long guardianId) {
         Bus bus = busRepository.findById(guardianId).orElseGet(() -> busRepository.findAll().stream().findFirst().orElseThrow());
+        return dashboardForBus(bus);
+    }
+
+    public DashboardResponse dashboardForUser(UserMaster user) {
+        Bus bus = user.getBusId() == null
+                ? busRepository.findAll().stream().findFirst().orElseThrow()
+                : busRepository.findById(user.getBusId()).orElseGet(() -> busRepository.findAll().stream().findFirst().orElseThrow());
+        return dashboardForBus(bus);
+    }
+
+    private DashboardResponse dashboardForBus(Bus bus) {
         return new DashboardResponse(
                 bus,
                 studentRepository.findByBusId(bus.getId()).stream().map(DashboardResponse.StudentJourney::from).toList(),

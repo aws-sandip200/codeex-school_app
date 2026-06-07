@@ -38,3 +38,18 @@ mark { background: #e8f7ff; border-radius: 999px; color: #0969a2; font-weight: 8
 .incident-card { background: linear-gradient(160deg, #fff, #fff7e1) !important; }
 .supabase { margin-bottom: 0; }
 @media (max-width: 850px) { .hero-grid, .split, .metrics { grid-template-columns: 1fr; } nav { flex-wrap: wrap; } }
+.button-link { background: #ffca28; border: 0; border-radius: 999px; color: #15223a; cursor: pointer; display: inline-block; font-weight: 800; padding: 14px 24px; text-decoration: none; }
+.button-link.secondary, .nav-logout { background: rgba(255,255,255,.14); color: white; outline: 1px solid rgba(255,255,255,.35); }
+.nav-logout { padding: 10px 18px; }
+.login-panel, .session-card { align-items: stretch; background: white; border: 1px solid #e5ebf2; border-radius: 28px; box-shadow: 0 16px 40px rgba(25,38,64,.08); display: grid; gap: 32px; grid-template-columns: 1.2fr .8fr; margin: -36px clamp(20px, 5vw, 72px) 52px; padding: 28px; position: relative; }
+.login-panel p, .session-card p { color: #667085; }
+.demo-grid { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 22px; }
+.demo-account { background: #f6f8fb; border: 1px solid #e5ebf2; border-radius: 18px; color: #172033; padding: 16px; text-align: left; }
+.demo-account strong, .demo-account span { display: block; }
+.demo-account span { color: #667085; font-size: .9rem; margin-top: 4px; }
+.login-card { background: linear-gradient(160deg, #10223f, #1d4b73); border-radius: 24px; color: white; display: grid; gap: 18px; padding: 24px; }
+.login-card label { display: grid; font-weight: 800; gap: 8px; }
+.login-card input { border: 0; border-radius: 14px; font: inherit; padding: 14px 16px; }
+.login-card button:disabled { cursor: progress; opacity: .75; }
+.session-card { align-items: center; grid-template-columns: 1fr auto; }
+@media (max-width: 850px) { .login-panel, .session-card, .demo-grid { grid-template-columns: 1fr; } }

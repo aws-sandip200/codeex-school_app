@@ -2,29 +2,66 @@
   <section class="hero">
     <nav>
       <div class="brand"><span>🚌</span> SkoolBus Guardian</div>
-      <a href="#scenario">Parent scenario</a>
-      <a href="#ops">School ops</a>
-      <a href="#supabase">Supabase</a>
+      <a href="#login">Login</a>
+      <a href="#scenario" *ngIf="currentUser">Tracking timeline</a>
+      <a href="#ops" *ngIf="currentUser">School ops</a>
+      <button class="nav-logout" type="button" *ngIf="currentUser" (click)="logout()">Logout</button>
     </nav>
     <div class="hero-grid">
       <div>
-        <p class="eyebrow">NFC + GPS + parent notifications</p>
-        <h1>Know exactly when every child boards, reaches school, and returns home.</h1>
-        <p class="hero-copy">A real-world school transportation suite for parents and schools with route ETAs, delay escalation, alternate bus handling, and smart-card attendance.</p>
-        <div class="cta-row"><button>Track my bus</button><button class="secondary">View school console</button></div>
+        <p class="eyebrow">Role login + NFC + GPS + parent notifications</p>
+        <h1>One secure login table for students, parents, drivers, and school authority.</h1>
+        <p class="hero-copy">Sign in from <strong>user_master_table</strong> to track every child, bus handoff, route ETA, delay escalation, alternate bus assignment, and smart-card attendance event.</p>
+        <div class="cta-row"><a class="button-link" href="#login">Login to track</a><a class="button-link secondary" href="#ops">View school console</a></div>
       </div>
       <div class="phone-card" [class.loading]="loading">
-        <div class="phone-header">Live Route</div>
+        <div class="phone-header">{{ currentUser ? currentUser.role + ' session' : 'Awaiting login' }}</div>
         <div class="bus-code">{{ dashboard?.bus?.busCode || 'G071845' }}</div>
         <div class="map-line"><span></span><span></span><span></span></div>
         <p>{{ dashboard?.bus?.routeName || 'East City Route - Sector 14' }}</p>
         <strong>{{ dashboard?.bus?.etaMinutes || 2 }} min to your stop</strong>
-        <small [class]="statusClass">{{ dashboard?.bus?.status || 'ON_ROUTE' }}</small>
+        <small [class]="statusClass">{{ dashboard?.bus?.status || 'LOGIN_REQUIRED' }}</small>
       </div>
     </div>
   </section>
 
   <p class="api-warning" *ngIf="error">{{ error }}</p>
+
+  <section id="login" class="login-panel" *ngIf="!currentUser; else signedInSummary">
+    <div>
+      <p class="eyebrow">user_master_table</p>
+      <h2>Login by role</h2>
+      <p>Use a demo account or type credentials to load the tracking dashboard attached to that user.</p>
+      <div class="demo-grid">
+        <button type="button" class="demo-account" *ngFor="let account of demoAccounts" (click)="useDemoAccount(account)">
+          <strong>{{ account.label }}</strong>
+          <span>{{ account.username }} / {{ account.password }}</span>
+        </button>
+      </div>
+    </div>
+    <form class="login-card" (ngSubmit)="login()">
+      <label>
+        Username
+        <input name="username" [(ngModel)]="credentials.username" autocomplete="username" required>
+      </label>
+      <label>
+        Password
+        <input name="password" type="password" [(ngModel)]="credentials.password" autocomplete="current-password" required>
+      </label>
+      <button type="submit" [disabled]="loading">{{ loading ? 'Signing in...' : 'Sign in and track student' }}</button>
+    </form>
+  </section>
+
+  <ng-template #signedInSummary>
+    <section class="session-card" *ngIf="currentUser as user">
+      <div>
+        <p class="eyebrow">Authenticated dashboard</p>
+        <h2>Welcome, {{ user.displayName }}</h2>
+        <p>{{ user.role }} access is linked to bus #{{ user.busId }}<span *ngIf="user.studentId"> and student #{{ user.studentId }}</span>.</p>
+      </div>
+      <button type="button" (click)="logout()">Switch user</button>
+    </section>
+  </ng-template>
 
   <section class="metrics" *ngIf="dashboard as data">
     <article><strong>{{ data.bus.occupancy }}</strong><span>students onboard</span></article>
@@ -33,9 +70,9 @@
     <article><strong>{{ data.incidents.length }}</strong><span>open incidents</span></article>
   </section>
 
-  <section id="scenario" class="timeline">
+  <section id="scenario" class="timeline" *ngIf="dashboard as data">
     <div class="section-heading"><p>Real case scenario</p><h2>From school departure to safe handoff</h2></div>
-    <article *ngFor="let event of dashboard?.notifications">
+    <article *ngFor="let event of data.notifications">
       <time>{{ event.occurredAt | date:'shortTime' }}</time>
       <div><h3>{{ event.title }}</h3><p>{{ event.message }}</p><span>{{ event.channel }} · {{ event.eventType }}</span></div>
     </article>
@@ -43,10 +80,10 @@
 
   <section id="ops" class="split" *ngIf="dashboard as data">
     <div>
-      <p class="eyebrow">Guardian roster</p>
+      <p class="eyebrow">Student roster</p>
       <h2>NFC smart-card attendance</h2>
       <div class="student" *ngFor="let student of data.students">
-        <div><strong>{{ student.studentName }}</strong><span>{{ student.grade }} · {{ student.pickupStop }}</span></div>
+        <div><strong>{{ student.studentName }}</strong><span>{{ student.grade }} · {{ student.pickupStop }} · Guardian: {{ student.guardianName }}</span></div>
         <mark>{{ student.morningStatus }}</mark>
       </div>
     </div>
@@ -63,7 +100,7 @@
 
   <section id="supabase" class="supabase">
     <p class="eyebrow">Database-ready</p>
-    <h2>Supabase Postgres stores buses, guardians, students, GPS pings, NFC scans, notifications, and incidents.</h2>
-    <p>Use the included SQL schema and Spring profile to connect the API to your Supabase project while Angular can optionally read realtime notification rows using the anon key.</p>
+    <h2>Supabase Postgres stores user_master_table logins, buses, guardians, students, GPS pings, NFC scans, notifications, and incidents.</h2>
+    <p>The Spring Boot login endpoint reads role-based users from <strong>user_master_table</strong>, then returns the matching bus and student tracking dashboard to Angular.</p>
   </section>
 </main>
