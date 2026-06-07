@@ -49,3 +49,21 @@ export interface Dashboard {
   notifications: NotificationEvent[];
   incidents: Incident[];
 }
+
+
+export type UserRole = 'STUDENT' | 'PARENT' | 'DRIVER' | 'ADMIN';
+
+export interface LoginRequest {
+  username: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  userId: number;
+  username: string;
+  displayName: string;
+  role: UserRole;
+  studentId?: number;
+  busId?: number;
+  dashboard: Dashboard;
+}

@@ -30,6 +30,21 @@ create table if not exists students (
   bus_id bigint not null references buses(id) on delete cascade
 );
 
+
+create table if not exists user_master_table (
+  id bigserial primary key,
+  username text not null unique,
+  password_hash text not null,
+  display_name text not null,
+  role text not null check (role in ('STUDENT', 'PARENT', 'DRIVER', 'ADMIN')),
+  phone text,
+  email text,
+  student_id bigint references students(id) on delete set null,
+  bus_id bigint references buses(id) on delete set null,
+  active boolean not null default true,
+  created_at timestamptz not null default now()
+);
+
 create table if not exists notification_events (
   id bigserial primary key,
   event_type text not null,
@@ -52,6 +67,7 @@ create table if not exists incidents (
 
 alter table buses enable row level security;
 alter table students enable row level security;
+alter table user_master_table enable row level security;
 alter table notification_events enable row level security;
 alter table incidents enable row level security;
 
@@ -67,6 +83,18 @@ on conflict (bus_code) do nothing;
 insert into students (student_name, grade, pickup_stop, guardian_name, guardian_phone, morning_status, evening_status, last_event_at, bus_id)
 select 'Aarav Sharma', 'Grade 4', 'Maple Apartments', 'Neha Sharma', '+91 90000 10001', 'PICKED_UP_FROM_STOP', 'WAITING_AT_SCHOOL', now(), id from buses where bus_code = 'G071845'
 on conflict do nothing;
+
+insert into user_master_table (username, password_hash, display_name, role, phone, email, student_id, bus_id)
+select seed.username, seed.password_hash, seed.display_name, seed.role, seed.phone, seed.email, s.id, b.id
+from (values
+  ('student', '703b0a3d6ad75b649a28adde7d83c6251da457549263bc7ff45ec709b0a8448b', 'Aarav Sharma', 'STUDENT', '+91 90000 10001', 'aarav@example.com', 'Aarav Sharma'),
+  ('parent', '82e3edf5f5f3a46b5f94579b61817fd9a1f356adcef5ee22da3b96ef775c4860', 'Neha Sharma', 'PARENT', '+91 90000 10001', 'neha@example.com', 'Aarav Sharma'),
+  ('driver', '494d022492052a06f8f81949639a1d148c1051fa3d4e4688fbd96efe649cd382', 'Ravi Kumar', 'DRIVER', '+91 98765 43210', 'ravi.driver@example.com', null),
+  ('admin', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', 'School Transport Admin', 'ADMIN', '+91 90000 99999', 'transport-admin@example.com', null)
+) as seed(username, password_hash, display_name, role, phone, email, student_name)
+join buses b on b.bus_code = 'G071845'
+left join students s on s.bus_id = b.id and s.student_name = seed.student_name
+on conflict (username) do nothing;
 
 insert into notification_events (event_type, title, message, channel, occurred_at, bus_id)
 select event_type, title, message, channel, occurred_at::timestamptz, b.id
