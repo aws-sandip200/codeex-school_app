@@ -22,3 +22,9 @@ app:
     url: ${SUPABASE_URL:https://YOUR_PROJECT_REF.supabase.co}
     anon-key: ${SUPABASE_ANON_KEY:YOUR_SUPABASE_ANON_KEY}
     service-role-key: ${SUPABASE_SERVICE_ROLE_KEY:YOUR_SUPABASE_SERVICE_ROLE_KEY}
+
+  device-location:
+    enabled: ${DEVICE_LOCATION_TRACKING_ENABLED:false}
+    api-key: ${IPLOCATE_API_KEY:}
+    target-ip: ${DEVICE_LOCATION_TARGET_IP:}
+    base-url: ${IPLOCATE_BASE_URL:https://iplocate.io/api}
